@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.rleibold</groupId>
+	<artifactId>springbootpg</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>springbootpg</name>
+	<description>Demo project for Spring Boot</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.8.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+	</properties>
+
+    <build>
+        <plugins>
+<!-- 
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+-->
+
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+				<dependencies>
+	                <dependency>
+	                    <groupId>org.springframework.boot</groupId>
+	                    <artifactId>spring-boot-maven-plugin</artifactId>
+	                    <version>1.2.7.RELEASE</version>
+	                </dependency>
+	            </dependencies>
+                <configuration>
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
+                    <finalName>SpringBootRunner</finalName>
+					<filters>
+		               <filter>
+		                   <artifact>*:*</artifact>
+		                   <excludes>
+		                       <exclude>META-INF/*.SF</exclude>
+		                       <exclude>META-INF/*.DSA</exclude>
+		                       <exclude>META-INF/*.RSA</exclude>
+		                   </excludes>
+		               </filter>
+		           </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-shade</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+            			<configuration>
+	                        <transformers>
+	                            <transformer
+	                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+	                                <resource>META-INF/spring.handlers</resource>
+	                            </transformer>
+	                            <transformer
+	                                implementation="org.springframework.boot.maven.PropertiesMergingResourceTransformer">
+	                                <resource>META-INF/spring.factories</resource>
+	                            </transformer>
+	                            <transformer
+	                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+	                                <resource>META-INF/spring.schemas</resource>
+	                            </transformer>
+	                            <transformer
+	                                implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.rleibold.springbootpg.SpringbootpgApplication</mainClass>
+                                </transformer>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+									<resource>META-INF/spring.provides</resource>
+								</transformer>                                
+
+<!-- 
+	                            <transformer
+	                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+	                                <mainClass>sg.butterfly.emenu.api.config.EmenuApp</mainClass>
+	                            </transformer>
+-->
+	                        </transformers>
+	                    </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.0.8</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>proguard</goal></goals>
+                    </execution>
+                </executions>
+                <configuration>
+<!--
+                    <options>
+                        <option>-dontskipnonpubliclibraryclasses</option>
+                        <option>-dontpreverify</option>
+                    </options>
+-->
+                    <proguardVersion>5.2</proguardVersion>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <proguardInclude>${basedir}/obfuscation.pro</proguardInclude>
+                    <libs>
+                        <lib>${env.JAVA_HOME}/jre/lib/rt.jar</lib>
+                        <lib>${env.JAVA_HOME}/jre/lib/jsse.jar</lib>
+                    </libs>
+                    <maxMemory>1152m</maxMemory>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>5.2</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+		</plugins>
+	</build>  
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>
